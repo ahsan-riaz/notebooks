@@ -9,6 +9,8 @@ services:
       - ./:/var/www/html
     ports:
       - 8080:80
+    depends_on:
+      - db
     networks:
       - internal
   db:
@@ -23,7 +25,6 @@ services:
       - internal
 
 volumes:
-  web:
   db:
 
 networks:

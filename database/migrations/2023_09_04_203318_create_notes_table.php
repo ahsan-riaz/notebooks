@@ -13,7 +13,13 @@ return new class extends Migration
     {
         Schema::create('notes', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('notebook_id');
+            $table->string('title');
+            $table->longText('content');
             $table->timestamps();
+    
+            // Foreign key constraint
+            $table->foreign('notebook_id')->references('id')->on('notebooks')->onDelete('cascade');
         });
     }
 
