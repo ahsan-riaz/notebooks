@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\NotebookController;
 use App\Http\Controllers\NoteController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,8 +16,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+// user routes
+Route::post('/login', [UserController::class, 'login']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/user', [UserController::class, 'fetchAuthUser']);
+    Route::post('/logout', [UserController::class, 'logout']);
 });
+
 Route::resource('notebooks', NotebookController::class);
 Route::resource('notes', NoteController::class);
+
+Route::get('user/{userId}/notes', [NotebookController::class, 'getNoteBooksByUser']);
+

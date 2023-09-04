@@ -9,6 +9,8 @@ class Notes extends Model
 {
     use HasFactory;
 
+    protected $guarded = []; 
+    
     public function notebook() 
     {
         return $this->belongsTo(Notebooks::class);
