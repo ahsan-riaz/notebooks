@@ -21,7 +21,7 @@ The Notebook App is a RESTful API designed to allow users to create and manage n
         - Isolates domain logic, making it easier to update or refactor.
         - Offers a centralized point for external integrations.
 
-These 2 patterns are implemented according to **SOLID** principles.
+These design patterns are implemented according to **SOLID** principles.
 
 ## Prerequisites
 
