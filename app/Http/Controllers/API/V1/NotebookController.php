@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API\V1;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\NotebookRequest;
+use App\Http\Resources\NoteBookResource;
 use App\Services\NotebookService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
@@ -20,7 +22,7 @@ class NotebookController extends Controller
      */
     public function index()
     {
-        return $this->notebookService->getAllNotebooks();
+        return new NoteBookResource($this->notebookService->getAllNotebooks());
     }
 
     /**
@@ -49,7 +51,7 @@ class NotebookController extends Controller
     {
         try {
             $notebook =  $this->notebookService->getNotebookById($id);
-            return response()->json($notebook);
+            return new NoteBookResource($notebook);
         } catch (\Exception $e) {
             Log::error('Error while fetching notebook: ' . $e->getMessage());
             return response()->json(['error' => 'Notebook not found'], 404);
@@ -89,13 +91,14 @@ class NotebookController extends Controller
             return response()->json(['error' => 'Server error'], 500);
         }
     }
-
-    public function getNotesByUser($userId)
+    
+    public function getNoteBooksByUser(Request $request)
     {
-        $user = User::find($userId);
+        // Get the authenticated user from the token
+        $user = $request->user();
 
         if (!$user) {
-            return response()->json(['error' => 'User not found'], 404);
+            return response()->json(['error' => 'User not authenticated'], 401);
         }
 
         $notes = $user->notes;

@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API\V1;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\NoteRequest;
+use App\Http\Resources\NoteResource;
 use App\Services\NotesService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
@@ -28,6 +30,7 @@ class NoteController extends Controller
      */
     public function store(NoteRequest $request)
     {
+        dd($request);
         try {
             $validatedData = $request->validated();
             $note = $this->noteService->createNote($validatedData);
@@ -50,7 +53,7 @@ class NoteController extends Controller
         try {
             $note =  $this->noteService->getNoteById($id);
 
-            return response()->json($note);
+            return new NoteResource($note);
         } catch (\Exception $e) {
             Log::error('Error while fetching note: ' . $e->getMessage());
             return response()->json(['error' => 'Note not found'], 404);

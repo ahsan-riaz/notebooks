@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\NotebookController;
-use App\Http\Controllers\NoteController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\API\V1\NotebookController;
+use App\Http\Controllers\API\V1\NoteController;
+use App\Http\Controllers\API\V1\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,15 +16,29 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// user routes
-Route::post('/login', [UserController::class, 'login']);
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/user', [UserController::class, 'fetchAuthUser']);
-    Route::post('/logout', [UserController::class, 'logout']);
+Route::prefix('v1')->group(function () {
+    
+    // Public routes
+    Route::post('/login', [UserController::class, 'login']);
+
+    // Routes that require authentication
+    Route::middleware('auth:sanctum')->group(function () {
+        
+        // User-related routes
+        Route::get('/user', [UserController::class, 'fetchAuthUser']);
+        Route::post('/logout', [UserController::class, 'logout']);
+
+        // Get all notebooks of authenticated user
+        Route::get('/usernotebooks', [NotebookController::class, 'getNoteBooksByUser']);
+
+        // CRUD operations for notebooks
+        Route::resource('notebooks', NotebookController::class);
+
+        // Get all notes of a specific notebook
+        Route::get('notebooks/{notebook}/notes', [NoteController::class, 'getNotesByNotebook']);
+
+        // CRUD operations for notes
+        Route::resource('notes', NoteController::class);
+
+    });
 });
-
-Route::resource('notebooks', NotebookController::class);
-Route::resource('notes', NoteController::class);
-
-Route::get('user/{userId}/notes', [NotebookController::class, 'getNoteBooksByUser']);
-
