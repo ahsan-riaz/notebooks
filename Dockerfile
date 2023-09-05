@@ -34,3 +34,6 @@ RUN chown -R www-data:www-data /var/www/html/bootstrap/cache
 
 # Enable mod_rewrite for .htaccess files
 RUN a2enmod rewrite
+
+# Start Laravel's built-in server
+CMD php artisan serve --host=0.0.0.0 --port=80

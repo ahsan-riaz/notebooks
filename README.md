@@ -85,7 +85,7 @@ Credentials for the test user are:
 
 All endpoints are prefixed with:
 ```
-http://localhost:8080/public/api/v1
+http://localhost:8080/api/v1
 ```
 
 ## Public Endpoints
