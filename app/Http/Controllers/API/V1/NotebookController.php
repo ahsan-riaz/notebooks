@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\NotebookRequest;
 use App\Http\Resources\NoteBookResource;
 use App\Services\NotebookService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
@@ -103,7 +104,7 @@ class NotebookController extends Controller
 
         $notes = $user->notes;
 
-        return response()->json($notes);
+        return new NoteBookResource($notes);
     }
 
 }

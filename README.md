@@ -1,66 +1,157 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# Notebook App: RESTful API Documentation
 
-## About Laravel
+## Overview
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+The Notebook App is a RESTful API designed to allow users to create and manage notebooks and their respective notes. This application is built using Laravel paired with MySQL. It has been dockerized for ease of setup and distribution.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Prerequisites
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Docker & Docker Compose installed
+- Postman or another API client (for testing endpoints)
 
-## Learning Laravel
+## Setup
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 1. Build and Spin Up Docker Containers
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Execute the following commands from the root directory of the project:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```bash
+docker-compose build
+docker-compose up -d
+```
 
-## Laravel Sponsors
+### 2. Database Setup
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+Create the necessary databases:
 
-### Premium Partners
+- `notebook`: Main database for application data.
+- `notebook_test`: Database for testing purposes.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+**Note**: Depending on the database container configuration, you might have to log in and create these databases manually.
 
-## Contributing
+### 3. Migrate Database
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+To set up the necessary database tables, execute:
 
-## Code of Conduct
+```bash
+docker-compose exec web php artisan migrate
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 4. Seed the Database with Test User
 
-## Security Vulnerabilities
+Populate the database with a test user using:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+docker-compose exec web php artisan db:seed --class=UsersTableSeeder
+```
 
-## License
+Credentials for the test user are:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- **Email**: `test@example.com`
+- **Password**: `password`
+
+## Usage
+
+## Base URL
+
+All endpoints are prefixed with:
+```
+http://localhost:8080/public/api/v1
+```
+
+## Public Endpoints
+
+### Login
+
+**Endpoint**: `/login`
+
+**Method**: `POST`
+
+**Description**: Authenticate the user and return an access token.
+
+**Payload**:
+```json
+{
+    "email": "user@example.com",
+    "password": "userpassword"
+}
+```
+
+**Response**:
+- **Success**: Returns an access token.
+- **Error**: Descriptive error message.
+
+---
+
+## Authenticated Endpoints
+
+These endpoints require an authentication token to be provided in the request header.
+
+### Fetch Authenticated User
+
+**Endpoint**: `/user`
+
+**Method**: `GET`
+
+**Description**: Retrieve the details of the authenticated user.
+
+**Response**:
+- **Success**: Returns the details of the authenticated user.
+- **Error**: Descriptive error message.
+
+### Logout
+
+**Endpoint**: `/logout`
+
+**Method**: `POST`
+
+**Description**: Log out the authenticated user, invalidating their token.
+
+**Response**:
+- **Success**: A success message confirming the user has been logged out.
+- **Error**: Descriptive error message.
+
+### Fetch All Notebooks for Authenticated User
+
+**Endpoint**: `/usernotebooks`
+
+**Method**: `GET`
+
+**Description**: Fetch all notebooks associated with the authenticated user.
+
+**Response**:
+- **Success**: Returns a list of notebooks.
+- **Error**: Descriptive error message.
+
+### CRUD Operations for Notebooks
+
+This set of endpoints allows for the creation, retrieval, updating, and deletion of notebooks.
+
+- **Create**: `POST /notebooks`
+- **Read**: `GET /notebooks/{notebookId}`
+- **Update**: `PUT /notebooks/{notebookId}`
+- **Delete**: `DELETE /notebooks/{notebookId}`
+
+### Fetch Notes for a Specific Notebook
+
+**Endpoint**: `/notebooks/{notebook}/notes`
+
+**Method**: `GET`
+
+**Description**: Fetch all notes associated with a specific notebook.
+
+**Response**:
+- **Success**: Returns a list of notes.
+- **Error**: Descriptive error message.
+
+### CRUD Operations for Notes
+
+This set of endpoints allows for the creation, retrieval, updating, and deletion of notes.
+
+- **Create**: `POST /notes`
+- **Read**: `GET /notes/{noteId}`
+- **Update**: `PUT /notes/{noteId}`
+- **Delete**: `DELETE /notes/{noteId}`
+
+
