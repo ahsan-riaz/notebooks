@@ -5,6 +5,24 @@
 
 The Notebook App is a RESTful API designed to allow users to create and manage notebooks and their respective notes. This application is built using Laravel paired with MySQL. It has been dockerized for ease of setup and distribution.
 
+### Design Patterns:
+
+1. **Repository Pattern**: 
+    - **Purpose**: To abstract the data layer, making our application more flexible to maintain. It acts as a middle-man between the data source (like a database) and the business logic layer of the application.
+    - **Benefits**:
+        - Centralized data access logic, making code easier to maintain.
+        - Decouples the application from persistence frameworks or storage mechanisms.
+        - Makes the application more testable since the domain logic can be tested separately from database access code.
+
+2. **Service Pattern**: 
+    - **Purpose**: To isolate application logic from the user interface. Acting as an intermediary, it also allows shared logic to be reused.
+    - **Benefits**:
+        - Provides a set of reusable functions across different parts of the application.
+        - Isolates domain logic, making it easier to update or refactor.
+        - Offers a centralized point for external integrations.
+
+These 2 patterns are implemented according to **SOLID** principles.
+
 ## Prerequisites
 
 - Docker & Docker Compose installed
@@ -21,7 +39,17 @@ docker-compose build
 docker-compose up -d
 ```
 
-### 2. Database Setup
+### 2. Create .env file
+
+Create .env from .env.example with following command (mac/linux):
+
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+
+### 3. Database Setup
 
 Create the necessary databases:
 
@@ -30,7 +58,7 @@ Create the necessary databases:
 
 **Note**: Depending on the database container configuration, you might have to log in and create these databases manually.
 
-### 3. Migrate Database
+### 4. Migrate Database
 
 To set up the necessary database tables, execute:
 
@@ -38,7 +66,7 @@ To set up the necessary database tables, execute:
 docker-compose exec web php artisan migrate
 ```
 
-### 4. Seed the Database with Test User
+### 5. Seed the Database with Test User
 
 Populate the database with a test user using:
 
