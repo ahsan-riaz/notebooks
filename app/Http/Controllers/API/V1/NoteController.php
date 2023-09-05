@@ -22,7 +22,7 @@ class NoteController extends Controller
      */
     public function index()
     {
-        return $this->noteService->getAllNotes();
+        return new NoteResource($this->noteService->getAllNotes());
     }
 
     /**
@@ -30,7 +30,6 @@ class NoteController extends Controller
      */
     public function store(NoteRequest $request)
     {
-        dd($request);
         try {
             $validatedData = $request->validated();
             $note = $this->noteService->createNote($validatedData);

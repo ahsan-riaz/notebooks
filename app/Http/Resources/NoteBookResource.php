@@ -3,9 +3,9 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class NoteBookResource extends JsonResource
+class NoteBookResource extends ResourceCollection
 {
     /**
      * Transform the resource into an array.
@@ -14,12 +14,13 @@ class NoteBookResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        dd($this->id);
-        return [
-            'id' => $this->id,
-            'user_id' => $this->user_id,
-            'title' => $this->title,
-            'description' => $this->description
-        ];
+        return $this->collection->map(function ($notebook) {
+            return [
+                'id' => $notebook->id,
+                'user_id' => $notebook->user_id,
+                'title' => $notebook->title,
+                'description' => $notebook->description
+            ];
+        })->all();
     }
 }

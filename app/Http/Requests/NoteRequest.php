@@ -11,7 +11,7 @@ class NoteRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,9 @@ class NoteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'notebook_id' => 'required|int',
+            'title' => 'required|max:255',
+            'content' => 'nullable|max:1000',
         ];
     }
 }
