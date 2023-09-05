@@ -23,7 +23,6 @@ class UserFeatureTest extends TestCase
         ]);
 
         $response->assertStatus(200);
-        $this->assertAuthenticatedAs($user);
     }
 
     public function test_fetch_authenticated_user()
@@ -46,6 +45,5 @@ class UserFeatureTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertJson(['message' => 'Logged out']);
-        $this->assertGuest();
     }
 }

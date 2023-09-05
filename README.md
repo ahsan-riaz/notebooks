@@ -183,3 +183,11 @@ This set of endpoints allows for the creation, retrieval, updating, and deletion
 - **Delete**: `DELETE /notes/{noteId}`
 
 
+### Tests
+
+Tests are incorporated a suite of tests to ensure the robustness and reliability of our application, covering critical areas like User management, Notebook functionality, and Note operations.
+
+```bash
+docker-compose exec web php artisan test
+```
+
